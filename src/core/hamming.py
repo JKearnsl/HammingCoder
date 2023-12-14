@@ -138,15 +138,23 @@ def decode(to_decode: BinaryStr, max_repair_repeat: int = 10):
             f'Кажется, не совпадает бит под номером {dm_bit_index!r}\n'
             f'Пробую заменить [{temp_data[dm_bit_index][0]}] на [{int(not temp_data[dm_bit_index][0])}]\n'
         )
+        bad_elem = temp_data[dm_bit_index]
+        if bad_elem[1]:
+            data[dm_bit_index] = (int(not data[dm_bit_index][0]), True)
         temp_data[dm_bit_index] = (int(not temp_data[dm_bit_index][0]), temp_data[dm_bit_index][1])
 
     return ''.join(str(value[0]) for index, value in temp_data.items() if not value[1])
 
 
 if __name__ == '__main__':
-    data = "100100101110001"
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(levelname)s - %(message)s'
+    )
+
+    data = "111100001111"
     encoded = encode(data)
-    print("encoded: ", encoded == "11110010001011110001")
-    encoded = "11110010001011110001"
+    # encoded = "01101111001011111"
     decoded = decode(encoded)
+    print(decoded)
     print("decoded: ", decoded == data)
